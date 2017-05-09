@@ -14,12 +14,13 @@ class UnlockSkinManager{
     
     func getUnlocks()->Int{
         let defaults = UserDefaults.standard
-        
         var value = defaults.integer(forKey: unlockConstant)
+        
         if value == 0 {
             value = 1
             defaults.set(value, forKey: unlockConstant)
         }
+            
         return value
     }
 
@@ -34,4 +35,11 @@ class UnlockSkinManager{
             defaults.set(value, forKey: unlockConstant)
         }
     }
+    
+    func buyPremium(){
+        let defaults = UserDefaults.standard
+        defaults.set(true , forKey: premiumPurchaseConstant)
+        defaults.set(6, forKey: unlockConstant)
+    }
+    
 }

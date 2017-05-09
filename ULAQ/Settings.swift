@@ -8,14 +8,24 @@
 
 import SpriteKit
 
-class Settings:SKScene {
+class Settings:SKScene, InAppPurchaseManagerDelegate {
     
     var lvl1Btn = SKSpriteNode()
     var lvl6Btn = SKSpriteNode()
     var lvl11Btn = SKSpriteNode()
     var lvl16Btn = SKSpriteNode()
     var lvl21Btn = SKSpriteNode()
+    var topScoreBtn = SKSpriteNode()
     var label = SKLabelNode()
+    var label1 = SKLabelNode()
+    var label2 = SKLabelNode()
+    var label3 = SKLabelNode()
+    
+    var isPremiumVersion = UserDefaults.standard.bool(forKey: premiumPurchaseConstant)
+
+    var purchaseManager = InAppPurchaseManager()
+    
+    var loadingAlert = UIAlertController()
     
     override func didMove(to view: SKView) {
         self.scaleMode = .fill
@@ -60,10 +70,53 @@ class Settings:SKScene {
         lvl21Btn.position = CGPoint(x: 280, y: -120)
         self.addChild(lvl21Btn)
         
+        if(UnlockSkinManager().getUnlocks() > 4){
+            topScoreBtn = SKSpriteNode(imageNamed: "checkYes")
+        }else{
+            topScoreBtn = SKSpriteNode(imageNamed: "checkLock")
+        }
+        
+        topScoreBtn.name = "topScoreBtn"
+        topScoreBtn.isUserInteractionEnabled = false
+        topScoreBtn.position = CGPoint(x: 280, y: -260)
+        self.addChild(topScoreBtn)
+        
+        label2 = SKLabelNode(fontNamed: "Chalkduster")
+        label2.text = "Reset Level"
+        label2.fontSize = 48
+        label2.name = "resetLevelBtn"
+        label2.isUserInteractionEnabled = false
+        label2.fontColor = SKColor.black
+        label2.position = CGPoint(x: 0, y: -430)
+        addChild(label2)
+        
+        if(!isPremiumVersion){
+            label1 = SKLabelNode(fontNamed: "Chalkduster")
+            label1.text = "Buy"
+            label1.fontSize = 48
+            label1.name = "buyBtn"
+            label1.isUserInteractionEnabled = false
+            label1.fontColor = SKColor.black
+            label1.position = CGPoint(x: 290, y: 550)
+            addChild(label1)
+            
+            label3 = SKLabelNode(fontNamed: "Chalkduster")
+            label3.text = "Restore Purchase"
+            label3.fontSize = 48
+            label3.name = "restorePurchaseBtn"
+            label3.isUserInteractionEnabled = false
+            label3.fontColor = SKColor.black
+            label3.position = CGPoint(x: 0, y: -550)
+            addChild(label3)
+        }
         
         self.getSkin()
+        
+        if(!isPremiumVersion){
+            self.purchaseManager.parent = self
+            self.purchaseManager.delegate = self
+        }
     }
-    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
@@ -78,36 +131,63 @@ class Settings:SKScene {
                 label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 
             }else if node.name == "lvl6Btn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 if(UnlockSkinManager().getUnlocks()>1){
                     resetCheckBox()
                     lvl6Btn.texture = SKTexture(imageNamed: "checkYes")
                     self.changeSkin(i: 2)
-                    label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                }else{
+                    self.askBuy()
                 }
                 
             }else if node.name == "lvl11Btn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 if(UnlockSkinManager().getUnlocks()>2){
                     resetCheckBox()
                     lvl11Btn.texture = SKTexture(imageNamed: "checkYes")
                     self.changeSkin(i: 3)
-                    label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                }else{
+                    self.askBuy()
                 }
                 
             }else if node.name == "lvl16Btn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 if(UnlockSkinManager().getUnlocks()>3){
                     resetCheckBox()
                     lvl16Btn.texture = SKTexture(imageNamed: "checkYes")
                     self.changeSkin(i: 4)
-                    label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                }else{
+                    self.askBuy()
                 }
                 
             }else if node.name == "lvl21Btn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 if(UnlockSkinManager().getUnlocks()>4){
                     resetCheckBox()
                     lvl21Btn.texture = SKTexture(imageNamed: "checkYes")
                     self.changeSkin(i: 5)
-                    label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                }else{
+                    self.askBuy()
                 }
+            
+            }else if node.name == "topScoreBtn"{
+                
+                if(UnlockSkinManager().getUnlocks()<4){
+                    label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                    self.askBuy()
+                }
+            
+            }else if node.name == "buyBtn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                self.askBuy()
+                
+            }else if node.name == "resetLevelBtn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                self.askReset()
+                
+            }else if node.name == "restorePurchaseBtn"{
+                label.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                self.purchaseManager.restorePurchase()
                 
             }else if node.name == "backBtn"{
                 let reveal = SKTransition.crossFade(withDuration: 0.5)
@@ -116,6 +196,53 @@ class Settings:SKScene {
                 self.scene?.view?.presentScene(scene!, transition:reveal)
                 
             }
+        }
+    }
+    
+    func askBuy(){
+        
+        var message = "Unable to reach App Store. Please try again later."
+        
+        if(!BUY_MESSAGE.isEmpty){
+            message = BUY_MESSAGE
+        }
+        
+        let refreshAlert = UIAlertController(title: "Buy Premium", message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        if(!BUY_MESSAGE.isEmpty){
+            refreshAlert.addAction(UIAlertAction(title: "Buy", style: .cancel, handler: { (action: UIAlertAction!) in
+                self.purchaseManager.buyPremium()
+            }))
+            
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+                print("Cancelled")
+            }))
+        }else{
+            refreshAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
+                print("Cancelled")
+            }))
+        }
+        
+        let vc = self.view?.window?.rootViewController
+        if vc?.presentedViewController == nil {
+            vc?.present(refreshAlert, animated: true, completion: nil)
+        }
+    }
+    
+    func askReset(){
+        let refreshAlert = UIAlertController(title: "Reset Level", message: "This will restart the game back the Level 1. Your unlocks will not be reset.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        refreshAlert.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { (action: UIAlertAction!) in
+            LevelManager().resetLevel()
+        }))
+        
+        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+            print("Cancelled")
+        }))
+        
+        let vc = self.view?.window?.rootViewController
+        if vc?.presentedViewController == nil {
+            vc?.present(refreshAlert, animated: true, completion: nil)
         }
     }
     
@@ -141,6 +268,14 @@ class Settings:SKScene {
             lvl11Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl16Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl21Btn.texture = SKTexture(imageNamed: "checkNo")
+            topScoreBtn.texture = SKTexture(imageNamed: "checkYes")
+        case 6:
+            lvl1Btn.texture = SKTexture(imageNamed: "checkNo")
+            lvl6Btn.texture = SKTexture(imageNamed: "checkNo")
+            lvl11Btn.texture = SKTexture(imageNamed: "checkNo")
+            lvl16Btn.texture = SKTexture(imageNamed: "checkNo")
+            lvl21Btn.texture = SKTexture(imageNamed: "checkNo")
+            topScoreBtn.texture = SKTexture(imageNamed: "checkYes")
         default:
             return
         }
@@ -193,6 +328,35 @@ class Settings:SKScene {
         default:
             return
         }
+    }
+    
+    func didFinishTask(sender: InAppPurchaseManager) {
+        self.resetCheckBox()
+        self.getSkin()
+        
+        label1.removeFromParent()
+        label3.removeFromParent()
+    }
+    
+    func transactionInProgress(sender: InAppPurchaseManager) {
+        self.showLoading()
+    }
+    
+    func transactionCompleted(sender: InAppPurchaseManager) {
+        self.hideLoading()
+    }
+    
+    func showLoading(){
+        loadingAlert = UIAlertController(title: "App Store", message: "Connecting to App Store..", preferredStyle: UIAlertControllerStyle.alert)
+        
+        let vc = self.view?.window?.rootViewController
+        if vc?.presentedViewController == nil {
+            vc?.present(loadingAlert, animated: true, completion: nil)
+        }
+    }
+    
+    func hideLoading(){
+        loadingAlert.dismiss(animated: true, completion: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

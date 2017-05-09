@@ -26,3 +26,9 @@ let unlockConstant = "unlockSetting"
 let currentScoreConstant = "currentScore"
 let topScoreConstant = "topScore"
 
+//Purchase Constant
+let premiumPurchaseConstant = "premiumPurchase"
+let PREMIUM_PROD_ID = "my.rohaizan.ulaq.premium"
+
+// Purchase Message
+var BUY_MESSAGE = ""

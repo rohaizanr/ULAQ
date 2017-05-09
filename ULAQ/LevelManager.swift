@@ -49,7 +49,11 @@ class LevelManager {
         
         if (value == 6 || value == 11 || value == 16 || value == 21){
             UnlockSkinManager().increamentUnlock()
-            
         }
+    }
+    
+    func resetLevel(){
+        let defaults = UserDefaults.standard
+        defaults.set(1, forKey: currentLevelConstant)
     }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		903439441EC1F64C00D6E06E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 903439431EC1F64C00D6E06E /* StoreKit.framework */; };
+		903439461EC223A200D6E06E /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903439451EC223A200D6E06E /* InAppPurchaseManager.swift */; };
 		909860DF1EBE2ECE00DD3AC0 /* LevelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909860DE1EBE2ECE00DD3AC0 /* LevelManager.swift */; };
 		909860E11EBE312600DD3AC0 /* Apple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909860E01EBE312600DD3AC0 /* Apple.swift */; };
 		909860E31EBE33F500DD3AC0 /* Obstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909860E21EBE33F500DD3AC0 /* Obstacle.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		903439431EC1F64C00D6E06E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		903439451EC223A200D6E06E /* InAppPurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManager.swift; sourceTree = "<group>"; };
 		906F71C71EC0A658008055C8 /* libisimulate-4.x.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libisimulate-4.x.a"; path = "../../../Downloads/libisimulate-4.x-1.5-20100925/libisimulate-4.x.a"; sourceTree = "<group>"; };
 		909860DE1EBE2ECE00DD3AC0 /* LevelManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelManager.swift; sourceTree = "<group>"; };
 		909860E01EBE312600DD3AC0 /* Apple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Apple.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				909860E21EBE33F500DD3AC0 /* Obstacle.swift */,
 				909860E41EBE354C00DD3AC0 /* Snake.swift */,
 				90EC4ABC1EBF2978004DB6E0 /* UnlockSkinManager.swift */,
+				903439451EC223A200D6E06E /* InAppPurchaseManager.swift */,
 			);
 			name = Class;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				903439461EC223A200D6E06E /* InAppPurchaseManager.swift in Sources */,
 				90EC4AB51EBECDED004DB6E0 /* Level.swift in Sources */,
 				909860E11EBE312600DD3AC0 /* Apple.swift in Sources */,
 				90EC4ABF1EBF3194004DB6E0 /* Score.swift in Sources */,
