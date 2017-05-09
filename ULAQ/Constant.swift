@@ -19,3 +19,10 @@ let obstacleUnit: UInt32 = 0x1 << 4
 let difficultyConstant = "difficultySetting"
 let firstTimerConstant = "firstTimer"
 let currentLevelConstant = "currentLevel"
+let skinConstant = "skinSetting"
+let unlockConstant = "unlockSetting"
+
+// Scores
+let currentScoreConstant = "currentScore"
+let topScoreConstant = "topScore"
+

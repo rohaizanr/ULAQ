@@ -22,6 +22,40 @@ class Snake: SKSpriteNode{
     
     var parentScene: SKScene?
     
+    
+    var headSkin:String = "Snakehead"
+    var bodySkin:String = "Body1"
+    
+    func getSkinSettings(){
+        let defaults = UserDefaults.standard
+        
+        var value = defaults.integer(forKey: skinConstant)
+        if value == 0 {
+            value = 1
+            defaults.set(value, forKey: skinConstant)
+        }
+        
+        switch value {
+        case 1:
+            headSkin = "Snakehead"
+            bodySkin = "Body1"
+        case 2:
+            headSkin = "Snakehead2"
+            bodySkin = "Body2"
+        case 3:
+            headSkin = "Snakehead3"
+            bodySkin = "Body3"
+        case 4:
+            headSkin = "Snakehead4"
+            bodySkin = "Body4"
+        case 5:
+            headSkin = "Snakehead5"
+            bodySkin = "Body5"
+        default:
+            return
+        }
+    }
+    
     func getSpeedSetting(){
         let defaults = UserDefaults.standard
         let value = defaults.integer(forKey: firstTimerConstant)
@@ -33,7 +67,9 @@ class Snake: SKSpriteNode{
     }
     
     func new(){
-        snakeHead = SKSpriteNode(imageNamed: "Snakehead")
+        self.getSkinSettings()
+        
+        snakeHead = SKSpriteNode(imageNamed: headSkin)
         snakeHead.position = CGPoint(x: 0,y: 0)
         snakeHead.physicsBody = SKPhysicsBody(circleOfRadius: snakeHead.size.width / 2.0)
         snakeHead.physicsBody?.affectedByGravity = false
@@ -59,7 +95,7 @@ class Snake: SKSpriteNode{
     }
     
     private func createBody(){
-        snakebody = SKSpriteNode(imageNamed: "Body2")
+        snakebody = SKSpriteNode(imageNamed: bodySkin)
         
         snakebody.position = CGPoint(x: snakeBodies[snakeBodies.count-1].position.x,y: snakeBodies[snakeBodies.count-1].position.y)
         

@@ -18,6 +18,7 @@ class HowTo:SKScene {
     var howto = SKSpriteNode()
     
     override func didMove(to view: SKView) {
+        self.scaleMode = .fill
         
         let label = SKLabelNode(fontNamed: "Chalkduster")
         label.text = "How To Play"

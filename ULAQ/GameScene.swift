@@ -19,20 +19,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var apple = Apple()
     var obstacle = Obstacle()
     var snake = Snake()
-
+    
+    var level = Level()
+    
     var motionManager = CMMotionManager()
     var destX:CGFloat  = 0.0
     var destY:CGFloat  = 0.0
     
+    var label2 = SKLabelNode()
+    
     override func didMove(to view: SKView) {
-        snake.parentScene = self
-        snake.new()
+        self.scaleMode = .fill
         
-        apple.parentScene = self
-        apple.new()
-        
-        obstacle.parentScene = self
-        obstacle.new()
+        self.setupLevel()
         
         self.physicsWorld.contactDelegate = self
         
@@ -74,6 +73,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+    func setupLevel(){
+        level = LevelManager().new()
+        
+        if(level.numOfObstacle > 0){
+            obstacle.parentScene = self
+            
+            obstacle.numOfObstacle = level.numOfObstacle
+            obstacle.spawnTimer = level.obstacleSpawnSec
+            obstacle.delayMoveTimer = level.obstacleMoveDelaySec
+            
+            obstacle.start()
+        }
+        
+        let label1 = SKLabelNode(fontNamed: "Chalkduster")
+        label1.text = "Level \(level.levelNum)"
+        label1.fontSize = 30
+        label1.fontColor = SKColor.black
+        label1.position = CGPoint(x: 0, y: -650)
+        addChild(label1)
+        
+        label2 = SKLabelNode(fontNamed: "Chalkduster")
+        
+        if(level.numOfApples>0){
+            label2.text = "Apples \(level.numOfApples)"
+        }else{
+            label2.text = "Apples 0"
+        }
+        
+        
+        
+        label2.fontSize = 30
+        label2.fontColor = SKColor.black
+        label2.position = CGPoint(x: -300, y: -650)
+        addChild(label2)
+        
+        
+        let label3 = SKLabelNode(fontNamed: "Chalkduster")
+        label3.text = "Obstacle \(level.numOfObstacle)"
+        label3.fontSize = 30
+        label3.fontColor = SKColor.black
+        label3.position = CGPoint(x: 280, y: -650)
+        addChild(label3)
+ 
+        apple.parentScene = self
+        apple.new()
+        
+        snake.parentScene = self
+        snake.new()
+    }
+    
+    
     func didBegin(_ contact: SKPhysicsContact) {
         //Collision detection
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -82,17 +132,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         case appleUnit | headUnit:
             currentScore += 1
+            level.numOfApples -= 1
+            
+            
+            if(level.numOfApples == 0){
+                self.gameOverEvent(win: true)
+            }else if(level.numOfApples > 0){
+                label2.text = "Apples \(level.numOfApples)"
+            }else if (level.numOfApples < 0){
+                label2.text = "Apples \(currentScore)"
+            }
             
             snake.eat(apple: apple)
             
         case borderUnit | headUnit:
-            self.gameOverEvent()
+            self.gameOverEvent(win: false)
             
         case bodyUnit | headUnit:
-            self.gameOverEvent()
+            self.gameOverEvent(win: false)
         
         case headUnit | obstacleUnit:
-            self.gameOverEvent()
+            self.gameOverEvent(win: false)
             
         default:
             return
@@ -100,21 +160,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func gameOverEvent(){
-        let score = Score(data: currentScore, topData: 0)!
+    func gameOverEvent(win:Bool){
+        let score = ScoreManager().new()
         
-        score.data = currentScore
-        score.topData =  score.getTopScore()
+        score.currentScore = currentScore
         
-        if(score.data > score.topData){
-            score.topData = score.data
+        if(score.currentScore > score.topScore){
+            score.topScore = score.currentScore
         }
-        score.saveScore(score: score)
+        
+        ScoreManager().saveScore(score: score)
         
         motionManager.stopAccelerometerUpdates()
         
         let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-        let gameOverScene = GameOver(size: self.size, won: false)
+        let gameOverScene = GameOver(size: self.size, won: win)
         self.scene?.view?.presentScene(gameOverScene, transition: reveal)
     }
     

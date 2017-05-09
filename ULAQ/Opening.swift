@@ -16,6 +16,7 @@ class Opening:SKScene {
     var openingEffect: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
+        self.scaleMode = .fill
         
         UIApplication.shared.isIdleTimerDisabled = true
         
@@ -78,8 +79,10 @@ class Opening:SKScene {
         rightButton.position = CGPoint(x: 300, y: -100)
         self.addChild(rightButton)
         
-        let score = Score(data: 0,topData: 0)!
-        let topScore = score.getTopScore()
+        
+        let scoreObj = ScoreManager().new()
+        
+        let topScore = scoreObj.topScore
         
         let label3 = SKLabelNode(fontNamed: "Chalkduster")
         label3.text = "Top score: \(topScore)"
@@ -87,6 +90,15 @@ class Opening:SKScene {
         label3.fontColor = SKColor.black
         label3.position = CGPoint(x: 0, y: -500)
         addChild(label3)
+        
+        let level = LevelManager().new()
+        
+        let label4 = SKLabelNode(fontNamed: "Chalkduster")
+        label4.text = "Level: \(level.levelNum)"
+        label4.fontSize = 40
+        label4.fontColor = SKColor.black
+        label4.position = CGPoint(x: 0, y: -450)
+        addChild(label4)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -115,6 +127,11 @@ class Opening:SKScene {
             }else if node.name == "settingButton" {
                 
                 label2.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                
+                let reveal = SKTransition.crossFade(withDuration: 0.5)
+                let scene = GameScene(fileNamed: "Settings")
+                scene?.scaleMode = .aspectFill
+                self.scene?.view?.presentScene(scene!, transition:reveal)
                 
             }else if node.name == "questionButton" {
                 

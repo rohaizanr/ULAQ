@@ -10,14 +10,24 @@ import SpriteKit
 
 class Obstacle: SKSpriteNode {
     
+    var currentObstacle:Int = 0
+    
+    var numOfObstacle:Int = 0
+    
+    var spawnTimer:Double = 5
     var timer = Timer()
+    
+    var delay = Timer()
+    var delayMoveTimer:Double = 10
     
     var parentScene: SKScene?
     
     var obstacle = SKSpriteNode()
-    
-    func new(){
-        timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.generateRandomObstacle), userInfo: nil, repeats: true)
+        
+    func start(){
+        timer = Timer.scheduledTimer(timeInterval: spawnTimer, target: self, selector: #selector(self.generateRandomObstacle), userInfo: nil, repeats: true)
+        
+        self.currentObstacle = self.numOfObstacle
     }
     
     func generate(){
@@ -49,15 +59,28 @@ class Obstacle: SKSpriteNode {
         
         obstacle.physicsBody?.restitution = 1
         obstacle.physicsBody?.linearDamping = 0
-        obstacle.physicsBody?.velocity = CGVector(dx: -500, dy: 500)
         
         parentScene?.addChild(obstacle)
+        
+        delay = Timer.scheduledTimer(timeInterval: delayMoveTimer, target: self, selector: #selector(self.moveObstacle), userInfo: nil, repeats: true)
     }
+    
+    
+    func moveObstacle(){
+        obstacle.physicsBody?.velocity = CGVector(dx: -500, dy: 500)
+        delay.invalidate()
+        
+        self.currentObstacle -= 1
+        
+        if(self.currentObstacle>0){
+            timer = Timer.scheduledTimer(timeInterval: spawnTimer, target: self, selector: #selector(self.generateRandomObstacle), userInfo: nil, repeats: true)
+        }
+    }
+    
     
     func remove(){
         obstacle.removeFromParent()
     }
-    
     
     func generateRandomObstacle(){
         self.generate()
