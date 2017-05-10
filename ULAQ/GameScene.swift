@@ -76,6 +76,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupLevel(){
         level = LevelManager().new()
         
+        if (PLAY_MODE==2) {
+            level.numOfObstacle = 0
+            level.numOfApples = 0
+            level.levelNum = 0
+        }
+        
         if(level.numOfObstacle > 0){
             obstacle.parentScene = self
             
@@ -100,8 +106,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }else{
             label2.text = "Apples 0"
         }
-        
-        
         
         label2.fontSize = 30
         label2.fontColor = SKColor.black

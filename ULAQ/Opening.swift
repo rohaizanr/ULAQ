@@ -12,7 +12,7 @@ import SpriteKit
 
 class Opening:SKScene {
     let label2 = SKLabelNode(fontNamed: "Chalkduster")
-    let label5 = SKLabelNode(fontNamed: "Chalkduster")
+    var label5 = SKLabelNode(fontNamed: "Chalkduster")
     
     var openingEffect: AVAudioPlayer!
     
@@ -103,8 +103,14 @@ class Opening:SKScene {
         
         
         if(UnlockSkinManager().getUnlocks() > 4){
-            let label5 = SKLabelNode(fontNamed: "Chalkduster")
-            label5.text = "Top Score Mode"
+            label5 = SKLabelNode(fontNamed: "Chalkduster")
+            
+            if(PLAY_MODE==1){
+                label5.text = "Level Mode"
+            }else{
+                label5.text = "Top Score Mode"
+            }
+            
             label5.fontSize = 40
             label5.fontColor = SKColor.black
             label5.position = CGPoint(x: 0, y: -100)
@@ -180,6 +186,16 @@ class Opening:SKScene {
                 self.changeLevelText(i: -1)
                 label2.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
                 
+            }else if node.name == "leftButton2" {
+                
+                self.changeMode()
+                label2.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                
+            }else if node.name == "rightButton2" {
+                
+                self.changeMode()
+                label2.run(SKAction.playSoundFileNamed("button.mp3",waitForCompletion:false));
+                
             }
         }
     }
@@ -201,6 +217,16 @@ class Opening:SKScene {
         }else{
             defaults.set(0.25, forKey: difficultyConstant)
             label2.text = "Easy"
+        }
+    }
+    
+    func changeMode(){
+        if(PLAY_MODE==1){
+            PLAY_MODE = 2
+            label5.text = "Top Score Mode"
+        }else{
+            PLAY_MODE = 1
+            label5.text = "Level Mode"
         }
     }
     

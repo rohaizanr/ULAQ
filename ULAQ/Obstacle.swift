@@ -68,7 +68,7 @@ class Obstacle: SKSpriteNode {
     
     func moveObstacle(){
         //obstacle.physicsBody?.velocity = CGVector(dx: -250, dy: 250)
-        obstacle.physicsBody?.applyImpulse(CGVector(dx: 25, dy: 25))
+        obstacle.physicsBody?.applyImpulse(CGVector(dx: 20, dy: 20))
         
         delay.invalidate()
         

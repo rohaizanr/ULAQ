@@ -65,7 +65,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
         
         if (queue.transactions.count < 1){
             
-            print("1")
             self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
         }
         
@@ -76,7 +75,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
             switch prodID {
             case PREMIUM_PROD_ID:
                 
-                print("2")
                 UnlockSkinManager().buyPremium()
                 
                 self.showDialog(title: "Restore Purchase Successful!", message: "You have successfully restored your purchase.")
@@ -86,7 +84,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                 SKPaymentQueue.default().finishTransaction(transaction)
             default:
                 
-                print("3")
                 self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
                 
                 SKPaymentQueue.default().finishTransaction(transaction)
@@ -99,7 +96,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
     // MARK: - RESTORE ERROR
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
         
-        print("4")
         self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
         
         delegate?.transactionCompleted(sender: self)
@@ -126,7 +122,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                     if productID == PREMIUM_PROD_ID {
                         UnlockSkinManager().buyPremium()
                         
-                        print("5")
                         self.showDialog(title: "Purchase Successful!", message: "Thank you for buying. All skins has been unlocked. Top Score mode is now available in the front screen. Hope you will enjoy the game. ")
                         
                         delegate?.didFinishTask(sender: self)
@@ -136,14 +131,12 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                     
                 case .failed:
                     
-                    print("6")
                     self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
                     
                     SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
                     break
                 case .restored:
                     
-                    print("7")
                     self.showDialog(title: "Restore Purchase Successful!", message: "You have successfully restored your purchase.")
                     
                     SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
@@ -170,7 +163,6 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
         } else {
             // IAP Purchases dsabled on the Device
             
-            print("8")
             self.showDialog(title: "Purchase Error", message: "Purchase is disabled in your device")
         }
         

@@ -32,3 +32,6 @@ let PREMIUM_PROD_ID = "my.rohaizan.ulaq.premium"
 
 // Purchase Message
 var BUY_MESSAGE = ""
+
+// Play Mode (1= Level mode, 2=Top Score Mode)
+var PLAY_MODE = 1

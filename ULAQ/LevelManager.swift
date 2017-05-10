@@ -42,14 +42,18 @@ class LevelManager {
     }
     
     func incrementLevel(){
-        let defaults = UserDefaults.standard
-        var value = defaults.integer(forKey: currentLevelConstant)
-        value += 1
-        defaults.set(value, forKey: currentLevelConstant)
         
-        if (value == 6 || value == 11 || value == 16 || value == 21){
-            UnlockSkinManager().increamentUnlock()
+        if (PLAY_MODE==1) {
+            let defaults = UserDefaults.standard
+            var value = defaults.integer(forKey: currentLevelConstant)
+            value += 1
+            defaults.set(value, forKey: currentLevelConstant)
+            
+            if (value == 6 || value == 11 || value == 16 || value == 21){
+                UnlockSkinManager().increamentUnlock()
+            }
         }
+        
     }
     
     func resetLevel(){
