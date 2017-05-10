@@ -12,6 +12,7 @@ import SpriteKit
 
 class Opening:SKScene {
     let label2 = SKLabelNode(fontNamed: "Chalkduster")
+    let label5 = SKLabelNode(fontNamed: "Chalkduster")
     
     var openingEffect: AVAudioPlayer!
     
@@ -36,7 +37,7 @@ class Opening:SKScene {
         label.text = "ULAQ"
         label.fontSize = 100
         label.fontColor = SKColor.black
-        label.position = CGPoint(x: 0, y: 300)
+        label.position = CGPoint(x: 0, y: 400)
         addChild(label)
         
         let label1 = SKLabelNode(fontNamed: "Chalkduster")
@@ -52,31 +53,31 @@ class Opening:SKScene {
         self.getLevelSetting()
         label2.fontSize = 50
         label2.fontColor = SKColor.black
-        label2.position = CGPoint(x: 0, y: -100)
+        label2.position = CGPoint(x: 0, y: -250)
         addChild(label2)
         
         let settingButton = SKSpriteNode(imageNamed: "settingButton")
         settingButton.name = "settingButton"
         settingButton.isUserInteractionEnabled = false
-        settingButton.position = CGPoint(x: -100, y: -300)
+        settingButton.position = CGPoint(x: -100, y: -350)
         self.addChild(settingButton)
         
         let questionButton = SKSpriteNode(imageNamed: "questionButton")
         questionButton.name = "questionButton"
         questionButton.isUserInteractionEnabled = false
-        questionButton.position = CGPoint(x: 100, y: -300)
+        questionButton.position = CGPoint(x: 100, y: -350)
         self.addChild(questionButton)
         
         let leftButton = SKSpriteNode(imageNamed: "leftButton")
         leftButton.name = "leftButton"
         leftButton.isUserInteractionEnabled = false
-        leftButton.position = CGPoint(x: -300, y: -100)
+        leftButton.position = CGPoint(x: -300, y: -240)
         self.addChild(leftButton)
         
         let rightButton = SKSpriteNode(imageNamed: "rightButton")
         rightButton.name = "rightButton"
         rightButton.isUserInteractionEnabled = false
-        rightButton.position = CGPoint(x: 300, y: -100)
+        rightButton.position = CGPoint(x: 300, y: -240)
         self.addChild(rightButton)
         
         
@@ -99,6 +100,29 @@ class Opening:SKScene {
         label4.fontColor = SKColor.black
         label4.position = CGPoint(x: 0, y: -450)
         addChild(label4)
+        
+        
+        if(UnlockSkinManager().getUnlocks() > 4){
+            let label5 = SKLabelNode(fontNamed: "Chalkduster")
+            label5.text = "Top Score Mode"
+            label5.fontSize = 40
+            label5.fontColor = SKColor.black
+            label5.position = CGPoint(x: 0, y: -100)
+            addChild(label5)
+            
+            let leftButton2 = SKSpriteNode(imageNamed: "leftButton")
+            leftButton2.name = "leftButton2"
+            leftButton2.isUserInteractionEnabled = false
+            leftButton2.position = CGPoint(x: -300, y: -90)
+            self.addChild(leftButton2)
+            
+            let rightButton2 = SKSpriteNode(imageNamed: "rightButton")
+            rightButton2.name = "rightButton2"
+            rightButton2.isUserInteractionEnabled = false
+            rightButton2.position = CGPoint(x: 300, y: -90)
+            self.addChild(rightButton2)
+        }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

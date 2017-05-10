@@ -26,6 +26,7 @@ class Settings:SKScene, InAppPurchaseManagerDelegate {
     var purchaseManager = InAppPurchaseManager()
     
     var loadingAlert = UIAlertController()
+    var okButtonAdded:Bool = false
     
     override func didMove(to view: SKView) {
         self.scaleMode = .fill
@@ -343,20 +344,36 @@ class Settings:SKScene, InAppPurchaseManagerDelegate {
     }
     
     func transactionCompleted(sender: InAppPurchaseManager) {
-        self.hideLoading()
+        let title  = sender.transactionTitle
+        let message  = sender.transactionMsg
+        
+        var titleStr = NSMutableAttributedString()
+        titleStr = NSMutableAttributedString(string: title as String)
+        
+        loadingAlert.setValue(titleStr, forKey: "attributedTitle")
+        
+        var titleMsg = NSMutableAttributedString()
+        titleMsg = NSMutableAttributedString(string: message as String)
+        
+        loadingAlert.setValue(titleMsg, forKey: "attributedMessage")
+        
+        if(!okButtonAdded){
+            let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            loadingAlert.addAction(action)
+            
+            okButtonAdded = true
+        }
     }
     
     func showLoading(){
+        okButtonAdded = false
+        
         loadingAlert = UIAlertController(title: "App Store", message: "Connecting to App Store..", preferredStyle: UIAlertControllerStyle.alert)
         
         let vc = self.view?.window?.rootViewController
         if vc?.presentedViewController == nil {
             vc?.present(loadingAlert, animated: true, completion: nil)
         }
-    }
-    
-    func hideLoading(){
-        loadingAlert.dismiss(animated: true, completion: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

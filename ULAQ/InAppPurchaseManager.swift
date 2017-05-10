@@ -22,6 +22,9 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
     var productsRequest = SKProductsRequest()
     var iapProducts = [SKProduct]()
     
+    var transactionTitle = ""
+    var transactionMsg = ""
+    
     var parent: SKScene?
 
     weak var delegate:InAppPurchaseManagerDelegate?
@@ -38,6 +41,7 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
     
     func fetchAvailableProducts()  {
         delegate?.transactionInProgress(sender: self)
+        
         let productIdentifiers = NSSet(objects:PREMIUM_PROD_ID)
         
         productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
@@ -58,7 +62,12 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
     
     // MARK: - RESTORE
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-        delegate?.transactionCompleted(sender: self)
+        
+        if (queue.transactions.count < 1){
+            
+            print("1")
+            self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
+        }
         
         for transaction in queue.transactions {
             let t: SKPaymentTransaction = transaction
@@ -66,67 +75,47 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
             
             switch prodID {
             case PREMIUM_PROD_ID:
+                
+                print("2")
                 UnlockSkinManager().buyPremium()
                 
-                let purchaceAlert = UIAlertController(title: "Restore Purchase Successful!", message: "You have successfully restored your purchase.", preferredStyle: UIAlertControllerStyle.alert)
-                
-                purchaceAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
-                    print("Close")
-                }))
-                
-                let vc = parent?.view?.window?.rootViewController
-                if vc?.presentedViewController == nil {
-                    vc?.present(purchaceAlert, animated: true, completion: nil)
-                }
+                self.showDialog(title: "Restore Purchase Successful!", message: "You have successfully restored your purchase.")
                 
                 delegate?.didFinishTask(sender: self)
                 
                 SKPaymentQueue.default().finishTransaction(transaction)
             default:
-                let purchaceAlert = UIAlertController(title: "Restore Purchase Failed!", message: "You have not made any purchase.", preferredStyle: UIAlertControllerStyle.alert)
                 
-                purchaceAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
-                    print("Close")
-                }))
+                print("3")
+                self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
                 
-                let vc = parent?.view?.window?.rootViewController
-                if vc?.presentedViewController == nil {
-                    vc?.present(purchaceAlert, animated: true, completion: nil)
-                }
                 SKPaymentQueue.default().finishTransaction(transaction)
             }
         }
+        
+        delegate?.transactionCompleted(sender: self)
     }
     
     // MARK: - RESTORE ERROR
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+        
+        print("4")
+        self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
+        
         delegate?.transactionCompleted(sender: self)
-        
-        let purchaceAlert = UIAlertController(title: "Restore Purchase Failed!", message: "You have not made any purchase.", preferredStyle: UIAlertControllerStyle.alert)
-        
-        purchaceAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
-            print("Close")
-        }))
-        
-        let vc = parent?.view?.window?.rootViewController
-        if vc?.presentedViewController == nil {
-            vc?.present(purchaceAlert, animated: true, completion: nil)
-        }
     }
 
     // MARK: - REQUEST IAP PRODUCTS
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        delegate?.transactionCompleted(sender: self)
-        
         if (response.products.count > 0) {
             iapProducts = response.products
         }
+        
+        delegate?.transactionCompleted(sender: self)
     }
     
     // MARK:- IAP PAYMENT QUEUE
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        delegate?.transactionCompleted(sender: self)
-        
         for transaction:AnyObject in transactions {
             if let trans = transaction as? SKPaymentTransaction {
                 switch trans.transactionState {
@@ -137,16 +126,8 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                     if productID == PREMIUM_PROD_ID {
                         UnlockSkinManager().buyPremium()
                         
-                        let purchaceAlert = UIAlertController(title: "Purchase Successful!", message: "Thank you for buying. Hope you will enjoy the game.", preferredStyle: UIAlertControllerStyle.alert)
-                        
-                        purchaceAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
-                            print("Close")
-                        }))
-                        
-                        let vc = parent?.view?.window?.rootViewController
-                        if vc?.presentedViewController == nil {
-                            vc?.present(purchaceAlert, animated: true, completion: nil)
-                        }
+                        print("5")
+                        self.showDialog(title: "Purchase Successful!", message: "Thank you for buying. All skins has been unlocked. Top Score mode is now available in the front screen. Hope you will enjoy the game. ")
                         
                         delegate?.didFinishTask(sender: self)
                     }
@@ -154,9 +135,17 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                     break
                     
                 case .failed:
+                    
+                    print("6")
+                    self.showDialog(title: "Restore Purchase Failed!", message: "You have not made any purchase.")
+                    
                     SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
                     break
                 case .restored:
+                    
+                    print("7")
+                    self.showDialog(title: "Restore Purchase Successful!", message: "You have successfully restored your purchase.")
+                    
                     SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
                     break
                     
@@ -164,13 +153,13 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                 }
             }
         }
+        
+        delegate?.transactionCompleted(sender: self)
     }
     
     // MARK: - MAKE PURCHASE OF A PRODUCT
     func canMakePurchases() -> Bool {  return SKPaymentQueue.canMakePayments()  }
     func purchaseMyProduct(product: SKProduct) {
-        delegate?.transactionCompleted(sender: self)
-        
         if self.canMakePurchases() {
             let payment = SKPayment(product: product)
             SKPaymentQueue.default().add(self)
@@ -180,16 +169,20 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
             productID = product.productIdentifier
         } else {
             // IAP Purchases dsabled on the Device
-            let purchaceAlert = UIAlertController(title: "Reset Level", message: "Puchase is disabled in your device", preferredStyle: UIAlertControllerStyle.alert)
             
-            purchaceAlert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action: UIAlertAction!) in
-                print("Close")
-            }))
-            
-            let vc = parent?.view?.window?.rootViewController
-            if vc?.presentedViewController == nil {
-                vc?.present(purchaceAlert, animated: true, completion: nil)
-            }
+            print("8")
+            self.showDialog(title: "Purchase Error", message: "Purchase is disabled in your device")
         }
+        
+        delegate?.transactionCompleted(sender: self)
+    }
+    
+    //MARK: Private functions
+    private func showDialog(title:String, message:String){
+        
+        self.transactionTitle = title
+        self.transactionMsg = message
+        
+        delegate?.transactionCompleted(sender: self)
     }
 }
