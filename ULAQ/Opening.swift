@@ -102,33 +102,31 @@ class Opening:SKScene {
         addChild(label4)
         
         
-        if(UnlockSkinManager().getUnlocks() > 4){
-            label5 = SKLabelNode(fontNamed: "Chalkduster")
+        label5 = SKLabelNode(fontNamed: "Chalkduster")
             
-            if(PLAY_MODE==1){
-                label5.text = "Level Mode"
-            }else{
-                label5.text = "Top Score Mode"
-            }
-            
-            label5.fontSize = 40
-            label5.fontColor = SKColor.black
-            label5.position = CGPoint(x: 0, y: -100)
-            addChild(label5)
-            
-            let leftButton2 = SKSpriteNode(imageNamed: "leftButton")
-            leftButton2.name = "leftButton2"
-            leftButton2.isUserInteractionEnabled = false
-            leftButton2.position = CGPoint(x: -300, y: -90)
-            self.addChild(leftButton2)
-            
-            let rightButton2 = SKSpriteNode(imageNamed: "rightButton")
-            rightButton2.name = "rightButton2"
-            rightButton2.isUserInteractionEnabled = false
-            rightButton2.position = CGPoint(x: 300, y: -90)
-            self.addChild(rightButton2)
+        if(PLAY_MODE==1){
+            label5.text = "Level Mode"
+        }else{
+            label5.text = "Top Score Mode"
         }
         
+        label5.fontSize = 40
+        label5.fontColor = SKColor.black
+        label5.position = CGPoint(x: 0, y: -100)
+        addChild(label5)
+        
+        let leftButton2 = SKSpriteNode(imageNamed: "leftButton")
+        leftButton2.name = "leftButton2"
+        leftButton2.isUserInteractionEnabled = false
+        leftButton2.position = CGPoint(x: -300, y: -90)
+        self.addChild(leftButton2)
+            
+        let rightButton2 = SKSpriteNode(imageNamed: "rightButton")
+        rightButton2.name = "rightButton2"
+        rightButton2.isUserInteractionEnabled = false
+        rightButton2.position = CGPoint(x: 300, y: -90)
+        self.addChild(rightButton2)
+ 
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
