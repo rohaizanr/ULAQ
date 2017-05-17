@@ -122,7 +122,7 @@ class InAppPurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransac
                     if productID == PREMIUM_PROD_ID {
                         UnlockSkinManager().buyPremium()
                         
-                        self.showDialog(title: "Purchase Successful!", message: "Thank you for buying. All skins has been unlocked. Top Score mode is now available in the front screen. Hope you will enjoy the game. ")
+                        self.showDialog(title: "Purchase Successful!", message: "Thank you for buying. All skins has been unlocked. Hope you will enjoy the game. ")
                         
                         delegate?.didFinishTask(sender: self)
                     }
