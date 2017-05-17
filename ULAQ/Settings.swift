@@ -15,7 +15,6 @@ class Settings:SKScene, InAppPurchaseManagerDelegate {
     var lvl11Btn = SKSpriteNode()
     var lvl16Btn = SKSpriteNode()
     var lvl21Btn = SKSpriteNode()
-    var topScoreBtn = SKSpriteNode()
     var label = SKLabelNode()
     var label1 = SKLabelNode()
     var label2 = SKLabelNode()
@@ -70,17 +69,6 @@ class Settings:SKScene, InAppPurchaseManagerDelegate {
         lvl21Btn.isUserInteractionEnabled = false
         lvl21Btn.position = CGPoint(x: 280, y: -120)
         self.addChild(lvl21Btn)
-        
-        if(UnlockSkinManager().getUnlocks() > 4){
-            topScoreBtn = SKSpriteNode(imageNamed: "checkYes")
-        }else{
-            topScoreBtn = SKSpriteNode(imageNamed: "checkLock")
-        }
-        
-        topScoreBtn.name = "topScoreBtn"
-        topScoreBtn.isUserInteractionEnabled = false
-        topScoreBtn.position = CGPoint(x: 280, y: -260)
-        self.addChild(topScoreBtn)
         
         label2 = SKLabelNode(fontNamed: "Chalkduster")
         label2.text = "Reset Level"
@@ -269,14 +257,12 @@ class Settings:SKScene, InAppPurchaseManagerDelegate {
             lvl11Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl16Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl21Btn.texture = SKTexture(imageNamed: "checkNo")
-            topScoreBtn.texture = SKTexture(imageNamed: "checkYes")
         case 6:
             lvl1Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl6Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl11Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl16Btn.texture = SKTexture(imageNamed: "checkNo")
             lvl21Btn.texture = SKTexture(imageNamed: "checkNo")
-            topScoreBtn.texture = SKTexture(imageNamed: "checkYes")
         default:
             return
         }
