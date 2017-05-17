@@ -1,4 +1,4 @@
-# ULAQ (Uses Linear Array Queue)
+# ULAQ (Uses Linear Array Queue) 
 ULAQ : /o͞olärk/
 Definition: (n.) Nothern Malaysian slang for snake.
 
@@ -12,7 +12,9 @@ Contributions are always welcome.
 
 Key contributor names will be published on the [App Store](https://itunes.apple.com/us/app/ulaq/id1234079331?mt=8) app.
 
-**Will make your resume look good. :)**
+## Version
+1.2 - Unlocked Top Score Mode
+1.1 - Complete Game
 
 ## Available Features
 
@@ -28,3 +30,16 @@ Key contributor names will be published on the [App Store](https://itunes.apple.
 1. UX/UI design
 2. Gameplay
 3. ???
+
+## Installation
+
+Go to [App Store](https://itunes.apple.com/us/app/ulaq/id1234079331?mt=8) and download the game.
+
+## Running the code
+
+1. Get Xcode 8 or higher
+2. Click "Check out an existing project"
+3. Enter repository location https://github.com/izandotnet/ULAQ.git
+4. Check out and choose your local path
+5. Press CMD+R to run code
+
